@@ -9,7 +9,7 @@ import Foundation
 
 struct Parameters {
     var podName: String = ""
-    var podPrefixName: String = "PT"
+    var podPrefixName: String = ""
     var podVersion: String = "1.0.0"
     var shouldCreatePodFile: Bool = true
     var shouldCreateMockStructure: Bool = false

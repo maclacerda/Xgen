@@ -8,8 +8,8 @@
 import Foundation
 
 enum PodManagerError: Error {
-    case commandError
-    case fillError
+    case commandError(String)
+    case fillError(String)
 }
 
 final class PodManager {
@@ -52,19 +52,7 @@ final class PodManager {
     
     func generatePod(_ console: ConsoleIO) throws {
         self.console = console
-        let parameters = Parameters(
-            podName: "Insurance",
-            podPrefixName: "PT",
-            podVersion: "1.0.0",
-            shouldCreatePodFile: true,
-            shouldCreateMockStructure: true,
-            shouldCreateSampleProject: true,
-            shouldCreateUnitTestsStructure: true,
-            shouldCreateReadmeFile: true,
-            shouldCreateMakeFile: true,
-            shouldCreateCodeOwnersFile: true
-        )
-        
+
         var commands = [Commands]()
         
         // Add all commands to create Pod structure
@@ -159,14 +147,14 @@ final class PodManager {
         }
         
         // Perfom commands
-        console.writeMessage("⚡️ Generating Pod, wait a minute please...☕️")
-//        try makeCommands(commands)
+        console.writeMessage("\n⚡️ Generating Pod, wait a minute please...☕️")
+        try makeCommands(commands)
         
-        console.writeMessage("📄 Filling files...")
+        console.writeMessage("\n📄 Filling files...")
         try fillFiles()
         
         // Finish
-        console.writeMessage("✅ Completed.")
+        console.writeMessage("\n✅ Completed.\n")
     }
     
     // MARK: - Helpers
@@ -174,26 +162,53 @@ final class PodManager {
     private func makeCommands(_ commands: [Commands]) throws {
         try commands.forEach {
             let commandOutput = shell($0.command)
-            
+
             if !commandOutput.isEmpty {
-                throw PodManagerError.commandError
+                throw PodManagerError.commandError(commandOutput)
             }
         }
     }
     
     private func fillFiles() throws {
         try structureContents.forEach {
-            print($0.command)
-//            let commandOutput = shell($0.command)
-            
-//            if !commandOutput.isEmpty {
-//                throw PodManagerError.fillError
-//            }
+            let commandOutput = shell($0.command)
+
+            if !commandOutput.isEmpty {
+                throw PodManagerError.fillError(commandOutput)
+            }
         }
-//        podContents
-//        sampleContents
-//        mocksContents
-//        testsContents
+
+        try podContents.forEach {
+            let commandOutput = shell($0.command)
+
+            if !commandOutput.isEmpty {
+                throw PodManagerError.fillError(commandOutput)
+            }
+        }
+
+        try sampleContents.forEach {
+            let commandOutput = shell($0.command)
+
+            if !commandOutput.isEmpty {
+                throw PodManagerError.fillError(commandOutput)
+            }
+        }
+
+        try mocksContents.forEach {
+            let commandOutput = shell($0.command)
+
+            if !commandOutput.isEmpty {
+                throw PodManagerError.fillError(commandOutput)
+            }
+        }
+
+        try testsContents.forEach {
+            let commandOutput = shell($0.command)
+
+            if !commandOutput.isEmpty {
+                throw PodManagerError.fillError(commandOutput)
+            }
+        }
     }
     
     private func getProjectName() {
@@ -208,7 +223,7 @@ final class PodManager {
     private func getPodPrefixName() {
         guard let console = self.console else { return }
         
-        console.writeMessage("📝 What is your pod name prefix? (Default is: \"PT\")")
+        console.writeMessage("\n📝 What is your pod name prefix? (Default is: \"\")")
         let prefixName = console.getInput()
         
         if !prefixName.isEmpty {
@@ -221,7 +236,7 @@ final class PodManager {
         var shouldCreatePodFile: String
 
         repeat {
-            console.writeMessage("📄 Add Podfile from your Pod? (y/n)")
+            console.writeMessage("\n📄 Add Podfile from your Pod? (y/n)")
             shouldCreatePodFile = console.getInput().lowercased()
         } while (shouldCreatePodFile.isEmpty || !shouldCreatePodFile.isYesOrNo)
         
@@ -233,7 +248,7 @@ final class PodManager {
         var shouldAddMock: String
         
         repeat {
-            console.writeMessage("🥸 Create a mock structure from your Pod? (y/n)")
+            console.writeMessage("\n🥸 Create a mock structure from your Pod? (y/n)")
             shouldAddMock = console.getInput()
         } while(shouldAddMock.isEmpty || !shouldAddMock.isYesOrNo)
         
@@ -245,7 +260,7 @@ final class PodManager {
         var shouldAddSample: String
         
         repeat {
-            console.writeMessage("🏗 Create a sample project from your Pod? (y/n)")
+            console.writeMessage("\n🏗  Create a sample project from your Pod? (y/n)")
             shouldAddSample = console.getInput()
         } while(shouldAddSample.isEmpty || !shouldAddSample.isYesOrNo)
         
@@ -257,7 +272,7 @@ final class PodManager {
         var shouldAddReadme: String
         
         repeat {
-            console.writeMessage("🧾 Create a README.md file from your Pod? (y/n)")
+            console.writeMessage("\n🧾 Create a README.md file from your Pod? (y/n)")
             shouldAddReadme = console.getInput()
         } while(shouldAddReadme.isEmpty || !shouldAddReadme.isYesOrNo)
         
@@ -269,7 +284,7 @@ final class PodManager {
         var shouldAddMakeFile: String
         
         repeat {
-            console.writeMessage("🛠 Create a Makefile from your Pod? (y/n)")
+            console.writeMessage("\n🛠  Create a Makefile from your Pod? (y/n)")
             shouldAddMakeFile = console.getInput()
         } while(shouldAddMakeFile.isEmpty || !shouldAddMakeFile.isYesOrNo)
         
@@ -281,7 +296,7 @@ final class PodManager {
         var shouldAddCodeOwners: String
         
         repeat {
-            console.writeMessage("🤝 Create a CODEOWNERS file from your Pod? (y/n)")
+            console.writeMessage("\n🤝 Create a CODEOWNERS file from your Pod? (y/n)")
             shouldAddCodeOwners = console.getInput()
         } while(shouldAddCodeOwners.isEmpty || !shouldAddCodeOwners.isYesOrNo)
         

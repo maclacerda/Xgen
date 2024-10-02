@@ -53,7 +53,7 @@ enum Xcodeversion {
 
             readme_path = 'README.md'
             readme = File.read(readme_path)
-            new_readme = readme.gsub(/[0-9]+.*'/, version + "'")
+            new_readme = readme.gsub(/[0-9]+.*'/, "'" + version + "'")
 
             File.open(readme_path, "w") { |file|
                 file.puts new_readme

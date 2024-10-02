@@ -22,7 +22,7 @@ enum Podspec {
                 s.author           = { '{AUTHOR}' => '{AUTHOR_MAIL}' }
 
                 #---------- Source Location ----------#
-                s.source           = { :git => "https://github.com/santander-group-europe/{REPO_NAME}.git", :tag => s.version.to_s }
+                s.source           = { :git => "https://github.com/santander-group-europe/{REPO_NAME}.git", :tag => "#{s.version.to_s}" }
               
                 #---------- Deployment Target ----------#
                 s.swift_version    = '5.0'

@@ -14,8 +14,6 @@ enum Makefile {
             return """
             setup_environment:
                 @echo "Installing project dependencies for setup"
-                @echo "Download and install Homebrew"
-                @echo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
                 @echo "Download and install cocoapods"
                 @brew install cocoapods
                 @echo "Download and install swiftlint"

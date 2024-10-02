@@ -29,14 +29,14 @@ class Xgen {
     // MARK: - Methods
     
     func interactiveMode() {
-        console.writeMessage("⚙️ Welcome to Xgen. This program create a base project structure for your Pod.For help type: 'Xgen -h'")
-        console.writeMessage("------------------------------------------------------------------------------------------------------\n\n")
-//        manager.getPodParameters(console)
-        
+        console.writeMessage("\n⚙️  Welcome to Xgen. This program create a base project structure for your Pod.For help type: 'Xgen -h'")
+        console.writeMessage("-----------------------------------------------------------------------------------------------------\n")
+        manager.getPodParameters(console)
+
         do {
             try manager.generatePod(console)
         } catch {
-            console.writeMessage("\n💥 An error ocurred, please try again.", to: .error)
+            console.writeMessage("\n💥 An error ocurred, please try again. \(error.localizedDescription)", to: .error)
         }
     }
 

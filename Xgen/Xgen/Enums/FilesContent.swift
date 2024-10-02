@@ -34,38 +34,55 @@ enum FilesContent {
         private var content: String {
             switch self {
             case .cleanProject(let podName):
-                return ""
-//                return CleanProject.content(podName).value
+                return CleanProject.content(podName).value
             case .postgen:
-                return ""
-//                return Postgen.content.value
+                return Postgen.content.value
             case .xcodeversion(let podName, let hasSample):
-                return ""
-//                return Xcodeversion.content(podName, hasSample: hasSample).value
+                return Xcodeversion.content(podName, hasSample: hasSample).value
             case .projectYml:
                 return ProjectYML.content.value
             case .readme(let podName, let repoName, let repoPath, let author, let authorMail):
                 return Readme.content(podName, repoName: repoName, repoPath: repoPath, author: author, authorMail: authorMail).value
             case .makefile(let podName):
-                return ""
-//                return Makefile.content(podName).value
+                return Makefile.content(podName).value
             case .codeowners:
-                return ""
-//                return CodeOwners.content.value
+                return CodeOwners.content.value
             case .license:
-                return ""
-//                return License.content.value
+                return License.content.value
             case .podfile(let podName, let hasSample, let hasTests):
-                return ""
-//                return Podfile.content(podName, hasSample: hasSample, hasTests: hasTests).value
+                return Podfile.content(podName, hasSample: hasSample, hasTests: hasTests).value
             case .podspec(let podName, let repoName, let author, let authorMail):
-                return ""
-//                return Podspec.content(podName, repoName: repoName, author: author, authorMail: authorMail).value
+                return Podspec.content(podName, repoName: repoName, author: author, authorMail: authorMail).value
             }
         }
         
         var command: String {
-            return "echo \(self.content)"
+            return String(format: "echo \"%@\" >> %@", self.content, self.fileName)
+        }
+
+        var fileName: String {
+            switch self {
+            case .podspec(let podName, _, _, _):
+                return String(format: "%@.podspec", podName)
+            case .readme:
+                return "README.md"
+            case .license:
+                return "LICENSE"
+            case .makefile:
+                return "Makefile"
+            case .podfile:
+                return "Podfile"
+            case .codeowners:
+                return "CODEOWNERS"
+            case .projectYml:
+                return "project.yml"
+            case .xcodeversion:
+                return "scripts/xcodeversion.rb"
+            case .postgen:
+                return "scripts/postgen.sh"
+            case .cleanProject:
+                return "scripts/cleanProject.sh"
+            }
         }
     }
     

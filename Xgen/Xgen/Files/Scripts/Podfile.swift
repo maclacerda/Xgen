@@ -12,20 +12,20 @@ enum Podfile {
         switch self {
         case .content(let podName, let hasSample, let hasTests):
             let testSnippet = """
-            
+
               target '{PODNAME}Tests' do
                 inherit! :search_paths
               end
-            end
+
             """
             
             let sampleSnippet = """
-            
-            target '{PODNAME}Sample' do
-              use_frameworks!
-              pods_dependencies
-            end
-            
+
+              target '{PODNAME}Sample' do
+                use_frameworks!
+                pods_dependencies
+              end
+
             """
             
             return """
@@ -69,35 +69,10 @@ enum Podfile {
             target '{PODNAME}' do
               use_frameworks!
               pods_dependencies
-            {HAS_TESTS}
-            {HAS_SAMPLE}
-            post_install do |installer|
-              installer.pods_project.targets.each do |target|
-                target.build_configurations.each do |config|
-                  config.build_settings['ENABLE_BITCODE'] = 'NO'
-                  
-                  if not ["deploy"].include? config.name
-                    config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Onone'
-                    config.build_settings['GCC_OPTIMIZATION_LEVEL'] = '0'
-                    config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES'
-                    config.build_settings['SWIFT_VERSION'] = '5.0'
-                    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-                    config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.4'
-                    config.build_settings['ENABLE_TESTABILITY'] = 'YES'
-                  end
-
-                  if config.name == "Release" || config.name == "Pre-appstore"
-                    config.build_settings['ENABLE_BITCODE'] = 'YES'
-                    config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Osize'
-                  else
-                    config.build_settings['OTHER_SWIFT_FLAGS'] ||= ['$(inherited)', '-D INSECURE_WEBVIEWS']
-                  end
-                end
-              end
             end
             """
                 .replacingOccurrences(of: "{HAS_TESTS}", with: hasTests ? testSnippet : "end")
-                .replacingOccurrences(of: "{HAS_SAMPLE}", with: hasSample ? sampleSnippet : "")
+                .replacingOccurrences(of: "{HAS_SAMPLE}", with: hasSample ? sampleSnippet : "end")
                 .replacingOccurrences(of: "{PODNAME}", with: podName)
         }
     }
